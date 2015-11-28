@@ -1,21 +1,25 @@
 angular.module('wedding.controllers', [])
 
-.controller('AppCtrl', function($scope, AuthService, AUTH_EVENTS) {
+.controller('AppCtrl', function($scope, AuthService, AUTH_EVENTS, $rootScope) {
 
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-	$scope.isAuthorized = AuthService.isAuthorized;
+	$scope.isAuthenticated = AuthService.isAuthenticated();
 	$scope.currentUser = AuthService.getUser();
 
-	$scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
+	$rootScope.$on(AUTH_EVENTS.notAuthorized, function(event) {
 	    var alertPopup = $ionicPopup.alert({
 	      title: 'Unauthorized!',
 	      template: 'You are not allowed to access this resource.'
 	    });
 	});
 	 
-	$scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
+	$rootScope.$on(AUTH_EVENTS.loginSuccess, function(event) {
+	    $scope.isAuthenticated = AuthService.isAuthenticated();
+	});
+
+	$rootScope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
 	    AuthService.logout();
 	    $state.go('app.dashboard');
 	    var alertPopup = $ionicPopup.alert({
@@ -25,7 +29,7 @@ angular.module('wedding.controllers', [])
 	});
 })
 
-.controller('LoginCtrl', function($scope, AuthService) {
+.controller('LoginCtrl', function($scope, AuthService, $state, $rootScope, AUTH_EVENTS) {
 	
 	$scope.loginData = {};
 	
@@ -33,7 +37,7 @@ angular.module('wedding.controllers', [])
 		console.log($scope.loginData)
 
 		AuthService.login($scope.loginData).then(function (user) {
-	      	//$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+	      	$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 			$state.go('app.profile');
 	    }, function (err) {
 	    	console.log(err)
@@ -48,7 +52,7 @@ angular.module('wedding.controllers', [])
 	
 })
 
-.controller('SignupCtrl', function($scope, AuthService) {
+.controller('SignupCtrl', function($scope, AuthService, $state, $ionicPopup) {
 	
 	$scope.signupData = {};
 	$scope.signupEmail = function(){  
@@ -57,7 +61,7 @@ angular.module('wedding.controllers', [])
  		
 		AuthService.signup($scope.signupData).then(function (user) {
 	      	//$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-			$state.go('app.profile');
+			$state.go('login');
 	    }, function (err) {
 	    	console.log(err)
 			var alertPopup = $ionicPopup.alert({

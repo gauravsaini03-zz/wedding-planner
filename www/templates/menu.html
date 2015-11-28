@@ -34,10 +34,13 @@
         <ion-item menu-close href="#/app/guestlist">
           Guest List
         </ion-item>
-        <ion-item menu-close href="#/login">
+        <ion-item menu-close ng-if="isAuthenticated" href="#/app/profile">
+          Profile
+        </ion-item>
+        <ion-item menu-close ng-if="!isAuthenticated" href="#/login">
           Login
         </ion-item>
-        <ion-item menu-close ng-if="isAuthorized(userRoles.user)" href="#/app/logout">
+        <ion-item menu-close ng-if="isAuthenticated" href="#/app/logout">
           Logout
         </ion-item>
       </ion-list>

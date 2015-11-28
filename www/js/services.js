@@ -1,38 +1,56 @@
 angular.module('wedding.services', [])
 
-.factory('AuthService', function ($http, USER_ROLES) {
+.factory('AuthService', function ($http, $q, USER_ROLES) {
  	var authService 	= {},
 		role			= '',		
 		isAuthenticated	= false;
 
+	if (window.localStorage.getItem("AUTH_TOKEN")) {
+      isAuthenticated = true;
+    }
+
 	authService.login = function (credentials) {
 
-		return fb.authWithPassword({
+		var deferred = $q.defer();
+
+		fb.authWithPassword({
 			email    : credentials.email,
 			password : credentials.password
 		}, function(error, authData) {
 			if (error) {
 				console.log("Login Failed!", error);
+				deferred.reject(error);
 			} else {
 				console.log("Authenticated successfully with payload:", authData);
 				authService.setUser(authData);
+				deferred.resolve();
 			}
 		});
+		return deferred.promise;
 	};
 
 	authService.signup = function (credentials) {
 
-		return fb.createUser({
+		var deferred = $q.defer();
+
+		fb.createUser({
 			email    : credentials.email,
 			password : credentials.password
 		}, function(error, userData) {
+			console.log(userData)
 			if (error) {
 				console.log("Error creating user:", error);
+				deferred.reject(error);
 			} else {
+				fb.child("users").child(userData.uid).set({
+			      provider: "password",
+			      name: credentials.name
+			    });
+				deferred.resolve();
 				console.log("Successfully created user account with uid:", userData.uid);
-				authService.setUser(userData)
 			}
 		});
+		return deferred.promise;
 	};
 
 	authService.logout = function () {
@@ -42,9 +60,6 @@ angular.module('wedding.services', [])
  
 	authService.getUser = function () {
 		var token = window.localStorage.getItem("AUTH_TOKEN");
-		if (token) {
-		  useCredentials(token);
-		}
 		return token;
   	}
 	
@@ -53,7 +68,7 @@ angular.module('wedding.services', [])
 		window.localStorage.setItem("AUTH_TOKEN", res.token);
 	    //$http.defaults.headers.common['X-Auth-Token'] = res.token;
 		isAuthenticated = true;
-		role = USER_ROLES.user
+		role = USER_ROLES.user;
   	}
 
 	authService.removeUser = function ()  {
@@ -73,10 +88,9 @@ angular.module('wedding.services', [])
 		if (!angular.isArray(authorizedRoles)) {
 		  authorizedRoles = [authorizedRoles];
 		}
-		return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
+		return (authService.isAuthenticated() && authorizedRoles.indexOf(role) !== -1);
 	};
-
  
-  return authService;
+  	return authService;
 
 })
