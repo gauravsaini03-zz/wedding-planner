@@ -2,7 +2,7 @@
 
 angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 'wedding.services', 'firebase'])
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
