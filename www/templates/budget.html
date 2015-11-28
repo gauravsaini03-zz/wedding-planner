@@ -1,15 +1,16 @@
 <ion-view view-title="Budget Calculator">
   <ion-content>
     <div class="list card">
-        <form name="myForm" novalidate>
+        <form name="budget" novalidate>
 	        <div class="list">
 	            <label class="item item-input">
-	                <span class="input-label">Amount Spent Today</span>
-	                <input type="text" name="amount" ng-model="amount" required>
+	                <span class="input-label"> <i class="icon ion-cash"></i> Amount Spent Today : </span>
+	                <input ng-pattern="/^[0-9]*$/" type="text" name="amount" ng-model="amount" required/>
+	                <span class="input-label" style="color: red;" ng-show="budget.amount.$error.pattern">Only numeric values allowed!</span>
 	            </label>
 	        </div>
 	        <div class="padding">
-	            <button type="button" class="button button-block button-positive" ng-disabled="myForm.$invalid" ng-click="addAmont(amount)">
+	            <button type="button" class="button button-block button-positive" ng-disabled="budget.$invalid" ng-click="addAmont(amount)">
 	               Add
 	            </button>
 	        </div>
