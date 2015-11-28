@@ -85,4 +85,16 @@ angular.module('wedding.controllers', [])
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
+})
+
+.controller('budgetCalCtrl', function($scope) {
+	$scope.budgetCalData = {};
+	
+	$scope.addAmont = function(amount){
+		var demoAmount = 5;
+		var totalAmount = Number(amount) + Number(demoAmount);
+		$scope.totalAmount = totalAmount;
+	};
+	
 });
+
