@@ -6,7 +6,9 @@
 	            <label class="item item-input">
 	                <span class="input-label"> <i class="icon ion-cash"></i> Amount Spent Today : </span>
 	                <input ng-pattern="/^[0-9]*$/" type="text" name="amount" ng-model="amount" required/>
-	                <span class="input-label" style="color: red;" ng-show="budget.amount.$error.pattern">Only numeric values allowed!</span>
+	                <span class="input-label" style="color: red;" ng-show="budget.amount.$error.pattern">
+	                   <i class="icon ion-bug"></i> Only numeric values allowed!
+	                </span>
 	            </label>
 	        </div>
 	        <div class="padding">
