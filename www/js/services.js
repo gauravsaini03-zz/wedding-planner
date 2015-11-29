@@ -61,15 +61,14 @@ angular.module('wedding.services', [])
 	};
  
 	authService.getUser = function () {
-		var token = window.localStorage.getItem("name");
-		return window.localStorage.getItem("firebase:session::weddingplanner");
+		return JSON.parse(window.localStorage.getItem("firebase:session::weddingplanner"));
   	}
 	
 	authService.setUser = function (res) {
 		user = $firebaseObject(fbase.child('users').child(res.uid));
-		window.localStorage.setItem("name", user.name);
 		isAuthenticated = true;
 		role = USER_ROLES.user;
+
   	}
 
 	authService.removeUser = function ()  {

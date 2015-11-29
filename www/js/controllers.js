@@ -8,7 +8,6 @@ angular.module('wedding.controllers', [])
 	$scope.isAuthenticated = AuthService.isAuthenticated();
 	$scope.currentUser = AuthService.getUser();
     if($scope.currentUser) {
-		$scope.currentUser = JSON.parse($scope.currentUser);
 		$scope.user = $firebaseObject(fbase.child('users').child($scope.currentUser.uid));
 	}
 	
@@ -19,7 +18,7 @@ angular.module('wedding.controllers', [])
 	$rootScope.$on(AUTH_EVENTS.notAuthorized, function(event) {
 	    var alertPopup = $ionicPopup.alert({
 	      title: 'Unauthorized!',
-	      template: 'You are not allowed to access this resource.'
+	      template: 'Please login to access this resource.'
 	    });
 	});
 	 
@@ -61,6 +60,38 @@ angular.module('wedding.controllers', [])
 	    	$rootScope.$broadcast("ERROR_HANDLER", err);
 	    });
 	};
+	
+})
+
+.controller('GuestListCtrl', function($scope, AuthService, $state, $ionicPopup) {
+
+	/*var ref = new Firebase(base + '/guests/' + AuthService.getUser().uid);
+	var posts = $firebaseArray(ref);*/
+
+	$scope.guests = $firebaseArray(fb.child("guests/" + AuthService.getUser().uid));
+
+	$ionicModal.fromTemplateUrl('addGuest.html', {
+	    scope: $scope,
+	    animation: 'slide-in-up'
+	}).then(function(modal) {
+	    $scope.modal = modal;
+	});
+
+	$scope.closeModal = function() {
+	    $scope.modal.hide();
+	};
+	
+	$scope.saveGuest = function() {
+	    $scope.guest = {}
+	    console.log(scope.guest)
+		fbase.child("guests").child(AuthService.getUser().uid).push($scope.guest);
+	    $scope.modal.hide();
+	};
+	
+	  // Execute action on hide modal
+	$scope.$on('modal.hidden', function() {
+	    // Execute action
+	});
 	
 })
 

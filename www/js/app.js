@@ -115,6 +115,9 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
       'menuContent': {
         templateUrl: 'templates/guestList.html'
       }
+    },
+    data: {
+      authorizedRoles: [USER_ROLES.user]
     }
   })
 

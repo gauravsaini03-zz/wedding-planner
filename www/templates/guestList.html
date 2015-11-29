@@ -1,5 +1,46 @@
-<ion-view view-title="Guests">
-  <ion-content>
-    <h1>Guests</h1>
-  </ion-content>
+<ion-view title="Guests" ng-init="list()">
+    <ion-nav-buttons side="right">
+        <button class="right button button-icon icon ion-plus" ng-click="addGuest()"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div class="list">
+            <div ng-repeat="guest in guests" class="item">
+                {{guest.name}}
+            </div>
+        </div>
+    </ion-content>
 </ion-view>
+
+<script id="addGuest.html" type="text/ng-template">
+  <ion-modal-view>
+	  <ion-header-bar>
+	  	<h1 class="title">Add Guest</h1>
+	  	<button class="button button-icon icon ion-close-round"></button>
+	  </ion-header-bar>
+	  <ion-content>
+	  	<form ng-submit="saveGuest()">
+		  	<div class="list">
+			  <label class="item item-input item-floating-label">
+			    <span class="input-label">Guest Name</span>
+			    <input type="text" ng-model="guest.name" placeholder="Guest Name">
+			  </label>
+			  <label class="item item-input item-floating-label">
+			    <span class="input-label">Contact Number</span>
+			    <input type="tel" ng-model="guest.number" placeholder="Last Name">
+			  </label>
+			  <label class="item item-input item-floating-label">
+			    <span class="input-label">Email</span>
+			    <input type="email" ng-model="guest.email" placeholder="Email">
+			  </label>
+			  <label class="item item-input item-floating-label">
+			    <span class="input-label">Notes</span>
+			    <input type="text" ng-model="guest.email" placeholder="Email">
+			  </label>
+			  <label class="item">
+		        <button class="button button-block button-positive" type="submit">Add Guest</button>
+		      </label>
+			</div>
+		</form>
+	  </ion-content>
+  </ion-modal-view>
+</script>
