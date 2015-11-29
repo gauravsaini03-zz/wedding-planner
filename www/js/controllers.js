@@ -1,12 +1,20 @@
 angular.module('wedding.controllers', [])
 
-.controller('AppCtrl', function($scope, AuthService, AUTH_EVENTS, $rootScope) {
+.controller('AppCtrl', function($scope, AuthService, AUTH_EVENTS, $rootScope, $firebaseObject, $ionicPopup,$timeout) {
 
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 	$scope.isAuthenticated = AuthService.isAuthenticated();
 	$scope.currentUser = AuthService.getUser();
+    if($scope.currentUser) {
+		$scope.currentUser = JSON.parse($scope.currentUser);
+		$scope.user = $firebaseObject(fbase.child('users').child($scope.currentUser.uid));
+	}
+	
+	$scope.logout = function() {
+		AuthService.logout();
+	}
 
 	$rootScope.$on(AUTH_EVENTS.notAuthorized, function(event) {
 	    var alertPopup = $ionicPopup.alert({
@@ -19,12 +27,10 @@ angular.module('wedding.controllers', [])
 	    $scope.isAuthenticated = AuthService.isAuthenticated();
 	});
 
-	$rootScope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
-	    AuthService.logout();
-	    $state.go('app.dashboard');
+	$rootScope.$on("ERROR_HANDLER", function(event, err) {
 	    var alertPopup = $ionicPopup.alert({
-	      title: 'Session Lost!',
-	      template: 'Sorry, You have to login again.'
+	      title: 'Error Message',
+	      template: err
 	    });
 	});
 })
@@ -34,20 +40,12 @@ angular.module('wedding.controllers', [])
 	$scope.loginData = {};
 	
 	$scope.loginEmail = function(){
-		console.log($scope.loginData)
-
 		AuthService.login($scope.loginData).then(function (user) {
 	      	$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 			$state.go('app.profile');
 	    }, function (err) {
-	    	console.log(err)
-			var alertPopup = $ionicPopup.alert({
-			  title: 'Login failed!',
-			  template: 'Please check your credentials'
-			});
-	      	//$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+	      	$rootScope.$broadcast("ERROR_HANDLER", err);
 	    });
-	 
 	};
 	
 })
@@ -55,24 +53,13 @@ angular.module('wedding.controllers', [])
 .controller('SignupCtrl', function($scope, AuthService, $state, $ionicPopup) {
 	
 	$scope.signupData = {};
-	$scope.signupEmail = function(){  
-		console.log($scope.signupData)
 
- 		
+	$scope.signupEmail = function(){  
 		AuthService.signup($scope.signupData).then(function (user) {
-	      	//$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 			$state.go('login');
 	    }, function (err) {
-	    	console.log(err)
-			var alertPopup = $ionicPopup.alert({
-			  title: 'Signup failed!',
-			  template: "signup not"
-			});
-	      	//$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+	    	$rootScope.$broadcast("ERROR_HANDLER", err);
 	    });
-
-		
-	 
 	};
 	
 })

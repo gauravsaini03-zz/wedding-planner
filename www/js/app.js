@@ -15,13 +15,14 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
- 	fb = new Firebase("https://weddingplanner.firebaseio.com");
+ 	fbase = new Firebase("https://weddingplanner.firebaseio.com");
   });
 
   $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
  
     if ('data' in next && 'authorizedRoles' in next.data) {
       var authorizedRoles = next.data.authorizedRoles;
+      console.log(AuthService.isAuthorized(authorizedRoles))
       if (!AuthService.isAuthorized(authorizedRoles)) {
         event.preventDefault();
         $state.go($state.current, {}, {reload: true});

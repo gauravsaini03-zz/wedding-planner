@@ -14,7 +14,7 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Welcome <b ng-if="currentUser">, {{ currentUser.name }}</b></h1>
+      <h1 class="title">Welcome <b ng-if="currentUser">, {{ user.name }}</b></h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
@@ -40,7 +40,7 @@
         <ion-item menu-close ng-if="!isAuthenticated" href="#/login">
           Login
         </ion-item>
-        <ion-item menu-close ng-if="isAuthenticated" href="#/app/logout">
+        <ion-item menu-close ng-if="isAuthenticated" ng-click="logout()">
           Logout
         </ion-item>
       </ion-list>

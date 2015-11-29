@@ -1,19 +1,21 @@
 angular.module('wedding.services', [])
 
-.factory('AuthService', function ($http, $q, USER_ROLES) {
+.factory('AuthService', function ($http, $q, USER_ROLES, $firebaseObject) {
  	var authService 	= {},
+ 		user  			= '',
 		role			= '',		
 		isAuthenticated	= false;
 
-	if (window.localStorage.getItem("AUTH_TOKEN")) {
-      isAuthenticated = true;
+	if (window.localStorage.getItem("name")) {
+    	isAuthenticated = true;
+    	role = USER_ROLES.user;
     }
 
 	authService.login = function (credentials) {
 
 		var deferred = $q.defer();
 
-		fb.authWithPassword({
+		fbase.authWithPassword({
 			email    : credentials.email,
 			password : credentials.password
 		}, function(error, authData) {
@@ -33,18 +35,17 @@ angular.module('wedding.services', [])
 
 		var deferred = $q.defer();
 
-		fb.createUser({
+		fbase.createUser({
 			email    : credentials.email,
 			password : credentials.password
 		}, function(error, userData) {
-			console.log(userData)
 			if (error) {
 				console.log("Error creating user:", error);
 				deferred.reject(error);
 			} else {
-				fb.child("users").child(userData.uid).set({
-			      provider: "password",
-			      name: credentials.name
+				fbase.child("users").child(userData.uid).set({
+			      name: credentials.name,
+			      email: credentials.email
 			    });
 				deferred.resolve();
 				console.log("Successfully created user account with uid:", userData.uid);
@@ -54,26 +55,25 @@ angular.module('wedding.services', [])
 	};
 
 	authService.logout = function () {
+		fbase.unauth();
 		isAuthenticated = false;
 		authService.removeUser();
 	};
  
 	authService.getUser = function () {
-		var token = window.localStorage.getItem("AUTH_TOKEN");
-		return token;
+		var token = window.localStorage.getItem("name");
+		return window.localStorage.getItem("firebase:session::weddingplanner");
   	}
 	
 	authService.setUser = function (res) {
-		console.log(res)
-		window.localStorage.setItem("AUTH_TOKEN", res.token);
-	    //$http.defaults.headers.common['X-Auth-Token'] = res.token;
+		user = $firebaseObject(fbase.child('users').child(res.uid));
+		window.localStorage.setItem("name", user.name);
 		isAuthenticated = true;
 		role = USER_ROLES.user;
   	}
 
 	authService.removeUser = function ()  {
-		//$http.defaults.headers.common['X-Auth-Token'] = undefined;
-		window.localStorage.removeItem("AUTH_TOKEN");
+		window.localStorage.removeItem("name");
   	}
  	
 	authService.isAuthenticated = function () {
