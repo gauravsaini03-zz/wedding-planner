@@ -1,6 +1,6 @@
-<ion-view title="Guests" ng-init="list()">
+<ion-view title="Guests">
     <ion-nav-buttons side="right">
-        <button class="right button button-icon icon ion-plus" ng-click="addGuest()"></button>
+        <button class="right button button-icon icon ion-plus" ng-click="modal.show()"></button>
     </ion-nav-buttons>
     <ion-content>
         <div class="list">
@@ -15,7 +15,7 @@
   <ion-modal-view>
 	  <ion-header-bar>
 	  	<h1 class="title">Add Guest</h1>
-	  	<button class="button button-icon icon ion-close-round"></button>
+	  	<button class="button button-icon icon ion-close-round" ng-click="modal.hide()"></button>
 	  </ion-header-bar>
 	  <ion-content>
 	  	<form ng-submit="saveGuest()">
@@ -26,7 +26,7 @@
 			  </label>
 			  <label class="item item-input item-floating-label">
 			    <span class="input-label">Contact Number</span>
-			    <input type="tel" ng-model="guest.number" placeholder="Last Name">
+			    <input type="tel" ng-model="guest.number" placeholder="Contact Number">
 			  </label>
 			  <label class="item item-input item-floating-label">
 			    <span class="input-label">Email</span>
@@ -34,7 +34,7 @@
 			  </label>
 			  <label class="item item-input item-floating-label">
 			    <span class="input-label">Notes</span>
-			    <input type="text" ng-model="guest.email" placeholder="Email">
+			    <input type="text" ng-model="guest.notes" placeholder="Notes">
 			  </label>
 			  <label class="item">
 		        <button class="button button-block button-positive" type="submit">Add Guest</button>

@@ -63,12 +63,12 @@ angular.module('wedding.controllers', [])
 	
 })
 
-.controller('GuestListCtrl', function($scope, AuthService, $state, $ionicPopup) {
+.controller('GuestListCtrl', function($scope, AuthService, $state, $ionicPopup, $firebaseArray, $ionicModal) {
 
 	/*var ref = new Firebase(base + '/guests/' + AuthService.getUser().uid);
 	var posts = $firebaseArray(ref);*/
 
-	$scope.guests = $firebaseArray(fb.child("guests/" + AuthService.getUser().uid));
+	$scope.guests = $firebaseArray(fbase.child("guests/" + AuthService.getUser().uid));
 
 	$ionicModal.fromTemplateUrl('addGuest.html', {
 	    scope: $scope,
@@ -76,14 +76,12 @@ angular.module('wedding.controllers', [])
 	}).then(function(modal) {
 	    $scope.modal = modal;
 	});
-
-	$scope.closeModal = function() {
-	    $scope.modal.hide();
-	};
 	
+	$scope.guest = {};
+
 	$scope.saveGuest = function() {
-	    $scope.guest = {}
-	    console.log(scope.guest)
+	    
+	    console.log($scope.guest)
 		fbase.child("guests").child(AuthService.getUser().uid).push($scope.guest);
 	    $scope.modal.hide();
 	};
@@ -93,18 +91,4 @@ angular.module('wedding.controllers', [])
 	    // Execute action
 	});
 	
-})
-
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
 });

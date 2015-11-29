@@ -22,7 +22,6 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
  
     if ('data' in next && 'authorizedRoles' in next.data) {
       var authorizedRoles = next.data.authorizedRoles;
-      console.log(AuthService.isAuthorized(authorizedRoles))
       if (!AuthService.isAuthorized(authorizedRoles)) {
         event.preventDefault();
         $state.go($state.current, {}, {reload: true});
@@ -113,7 +112,8 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
     url: '/guestlist',
     views: {
       'menuContent': {
-        templateUrl: 'templates/guestList.html'
+        templateUrl: 'templates/guestList.html',
+        controller: 'GuestListCtrl'
       }
     },
     data: {
