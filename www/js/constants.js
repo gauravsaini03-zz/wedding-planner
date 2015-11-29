@@ -1,8 +1,7 @@
 angular.module('wedding.constants', [])
 
 .constant('AUTH_EVENTS', {
-	loginSuccess: 'auth-login-success',
-	logoutSuccess: 'auth-logout-success',	
+	updateUser: 'update-user',
 	notAuthorized: 'auth-not-authorized',
 	notAuthenticated: 'auth-not-authenticated',
 })

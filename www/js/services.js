@@ -1,12 +1,12 @@
 angular.module('wedding.services', [])
 
-.factory('AuthService', function ($http, $q, USER_ROLES, $firebaseObject) {
+.factory('AuthService', function ($http, $q, USER_ROLES, $firebaseObject, $rootScope, AUTH_EVENTS) {
  	var authService 	= {},
  		user  			= '',
 		role			= '',		
 		isAuthenticated	= false;
 
-	if (window.localStorage.getItem("name")) {
+	if (window.localStorage.getItem("firebase:session::weddingplanner")) {
     	isAuthenticated = true;
     	role = USER_ROLES.user;
     }
@@ -57,7 +57,7 @@ angular.module('wedding.services', [])
 	authService.logout = function () {
 		fbase.unauth();
 		isAuthenticated = false;
-		authService.removeUser();
+      	$rootScope.$broadcast(AUTH_EVENTS.updateUser);
 	};
  
 	authService.getUser = function () {
@@ -71,10 +71,6 @@ angular.module('wedding.services', [])
 
   	}
 
-	authService.removeUser = function ()  {
-		window.localStorage.removeItem("name");
-  	}
- 	
 	authService.isAuthenticated = function () {
 		return isAuthenticated;
 	};

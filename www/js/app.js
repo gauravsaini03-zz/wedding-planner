@@ -15,6 +15,7 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
  	fbase = new Firebase("https://weddingplanner.firebaseio.com");
   });
 
@@ -24,17 +25,18 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
       var authorizedRoles = next.data.authorizedRoles;
       if (!AuthService.isAuthorized(authorizedRoles)) {
         event.preventDefault();
+        console.log($state.current)
         $state.go($state.current, {}, {reload: true});
         $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
       }
     }
  
-    if (!AuthService.isAuthenticated()) {
+    /*if (!AuthService.isAuthenticated()) {
       if (next.name == 'app.profile') {
         event.preventDefault();
         $state.go('login');
       }
-    }
+    }*/
   });
 
 })
@@ -76,6 +78,9 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
       'menuContent': {
         templateUrl: 'templates/budget.html'
       }
+    },
+    data: {
+      authorizedRoles: [USER_ROLES.user]
     }
   })
 
@@ -83,10 +88,12 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
 	url: '/todolist',
 	views: {
 	  'menuContent': {
-	    templateUrl: 'templates/todoList.html',
-	    controller: 'TodoListCtrl'
+	    templateUrl: 'templates/todoList.html'
 	  }
-	}
+	},
+	data: {
+      authorizedRoles: [USER_ROLES.user]
+    }
   })
 
   .state('app.todo', {
@@ -96,6 +103,9 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
         templateUrl: 'templates/todo.html',
         controller: 'TodoCtrl'
       }
+    },
+    data: {
+      authorizedRoles: [USER_ROLES.user]
     }
   })
   
@@ -105,6 +115,9 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
       'menuContent': {
         templateUrl: 'templates/myVendors.html'
       }
+    },
+    data: {
+      authorizedRoles: [USER_ROLES.user]
     }
   })
   
@@ -114,6 +127,19 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
       'menuContent': {
         templateUrl: 'templates/guestList.html',
         controller: 'GuestListCtrl'
+      }
+    },
+    data: {
+      authorizedRoles: [USER_ROLES.user]
+    }
+  })
+
+  .state('app.guest', {
+    url: '/guestlist/:guestId',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/guest.html',
+        controller: 'GuestCtrl'
       }
     },
     data: {
