@@ -65,6 +65,9 @@ angular.module('wedding.controllers', [])
 	$scope.signupEmail = function(){  
 		AuthService.signup($scope.signupData).then(function (user) {
 			$state.go('login');
+			$ionicAnalytics.track('Signup', {
+			    name: $scope.signupData.name
+			});
 	    }, function (err) {
 	    	$rootScope.$broadcast("ERROR_HANDLER", err);
 	    });

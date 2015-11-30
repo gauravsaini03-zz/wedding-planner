@@ -1,8 +1,8 @@
 // Wedding App
 
-angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 'wedding.services', 'firebase'])
+angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 'wedding.services', 'ionic.service.core', 'ionic.service.analytics', 'firebase'])
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS) {
+.run(function($ionicPlatform, $ionicAnalytics, $rootScope, $state, AuthService, AUTH_EVENTS) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -16,7 +16,19 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
       StatusBar.styleDefault();
     }
 
+    // Initialising Firebase object
  	fbase = new Firebase("https://weddingplanner.firebaseio.com");
+
+ 	var io = Ionic.io();
+ 	console.log(io);
+	var user = Ionic.User.current();
+	console.log(user);
+ 	// Ionic Analytics
+ 	$ionicAnalytics.register();
+ 	$ionicAnalytics.setGlobalProperties({
+	  app_version_number: 'v0.0.1',
+	  day_of_week: (new Date()).getDay()
+	});
   });
 
   $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {

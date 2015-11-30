@@ -36,7 +36,7 @@
         <ion-item menu-close ng-if="isAuthenticated" href="#/app/profile">
           Profile
         </ion-item>
-        <ion-item menu-close ng-if="!isAuthenticated" href="#/login">
+        <ion-item menu-close ion-track-tap="login-button" ng-if="!isAuthenticated" href="#/login">
           Login
         </ion-item>
         <ion-item menu-close ng-if="isAuthenticated" ng-click="logout()">
