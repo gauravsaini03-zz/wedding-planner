@@ -78,7 +78,7 @@ angular.module('wedding.controllers', [])
 	var posts = $firebaseArray(ref);*/
 
 	$scope.guests = $firebaseArray(fbase.child("guests/" + AuthService.getUser().uid));
-
+	console.log($scope.guests);
 	$ionicModal.fromTemplateUrl('addGuest.html', {
 	    scope: $scope,
 	    animation: 'slide-in-up'
@@ -102,6 +102,23 @@ angular.module('wedding.controllers', [])
 	
 })
 
+.controller('budgetCalCtrl', function($scope, $firebaseArray, AuthService) {
+	
+	$scope.budgetCalculator = $firebaseArray(fbase.child("budgetCalculator/" + AuthService.getUser().uid));
+	$scope.addAmont = function(amount){
+		fbase.child("budgetCalculator").child(AuthService.getUser().uid).push(amount);
+	};
+	
+	$scope.getTotal = function(budgetCalculator){
+		var totalBudget = 0;
+		for (i = 0; i < budgetCalculator.length; i++) { 
+			totalBudget = Number(totalBudget) + Number(budgetCalculator[i].$value);
+		}
+		$scope.totalBudget = totalBudget;
+	};
+	
+})
+
 .controller('GuestCtrl', function($scope, AuthService, $state, $firebaseArray, $stateParams,$firebaseObject) {
 	$scope.guest = $firebaseObject(fbase.child("guests").child(AuthService.getUser().uid).child($stateParams.guestId));
 	$scope.deleteGuest = function () {
@@ -109,3 +126,5 @@ angular.module('wedding.controllers', [])
 		$state.go(app.guestlist)
 	}
 });
+
+

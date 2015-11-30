@@ -76,7 +76,8 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
     url: '/budget',
     views: {
       'menuContent': {
-        templateUrl: 'templates/budget.html'
+        templateUrl: 'templates/budget.html',
+        controller: 'budgetCalCtrl'
       }
     },
     data: {
