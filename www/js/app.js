@@ -126,7 +126,21 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
     url: '/myvendors',
     views: {
       'menuContent': {
-        templateUrl: 'templates/myVendors.html'
+        templateUrl: 'templates/myVendors.html',
+        controller: 'VendorListCtrl'
+      }
+    },
+    data: {
+      authorizedRoles: [USER_ROLES.user]
+    }
+  })
+  
+  .state('app.vendor', {
+    url: '/vendorlist/:vendorId',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/vendor.html',
+        controller: 'VendorCtrl'
       }
     },
     data: {

@@ -128,6 +128,44 @@ angular.module('wedding.controllers', [])
 		fbase.child("guests").child(AuthService.getUser().uid).child($stateParams.guestId).remove();
 		$state.go(app.guestlist)
 	}
+})
+
+.controller('VendorListCtrl', function($scope, AuthService, $state, $FirebaseArray, $ionicPopup, $firebaseArray, $ionicModal, $stateParams) {
+
+	/*var ref = new Firebase(base + '/vendors/' + AuthService.getUser().uid);
+	var posts = $firebaseArray(ref);*/
+
+	$scope.vendors = $firebaseArray(fbase.child("vendors/" + AuthService.getUser().uid));
+	console.log($scope.vendors);
+	$ionicModal.fromTemplateUrl('addVendor.html', {
+	    scope: $scope,
+	    animation: 'slide-in-up'
+	}).then(function(modal) {
+	    $scope.modal = modal;
+	});
+	
+	$scope.vendor = {};
+
+	// Add new Vendor
+	$scope.saveVendor = function() {
+	    console.log($scope.vendor)
+		fbase.child("vendors").child(AuthService.getUser().uid).push($scope.vendor);
+	    $scope.modal.hide();
+	};
+
+	  // Execute action on hide modal
+	$scope.$on('modal.hidden', function() {
+	    // Execute action
+	});
+	
+})
+
+.controller('VendorCtrl', function($scope, AuthService, $state, $firebaseArray, $stateParams,$firebaseObject) {
+	$scope.vendor = $firebaseObject(fbase.child("vendors").child(AuthService.getUser().uid).child($stateParams.vendorId));
+	$scope.deleteVendor = function () {
+		fbase.child("vendors").child(AuthService.getUser().uid).child($stateParams.vendorId).remove();
+		$state.go(app.vendorlist)
+	}
 });
 
 

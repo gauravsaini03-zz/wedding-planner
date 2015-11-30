@@ -1,5 +1,47 @@
-<ion-view view-title="My Vendors">
-  <ion-content>
-    <h1>My vendors</h1>
-  </ion-content>
+<ion-view title="Vendors">
+    <ion-nav-buttons side="right">
+        <button class="right button button-icon icon ion-plus" ng-click="modal.show()"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div class="list">
+            <a ng-repeat="vendor in vendors" class="item" href="#/app/vendorlist/{{vendor.$id}}">
+              <h2>{{vendor.name}}</h2>
+              <p>{{vendor.contact}}</p>
+            </a>
+        </div>
+    </ion-content>
 </ion-view>
+
+<script id="addVendor.html" type="text/ng-template">
+  <ion-modal-view>
+      <ion-header-bar>
+        <h1 class="title">Add Vendor</h1>
+        <button class="button button-icon icon ion-close-round" ng-click="modal.hide()"></button>
+      </ion-header-bar>
+      <ion-content>
+        <form ng-submit="saveVendor()">
+            <div class="list">
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Vendor Name</span>
+                <input type="text" ng-model="vendor.name" placeholder="Vendor Name">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Contact Number</span>
+                <input type="tel" ng-model="vendor.contact" placeholder="Contact Number">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Email</span>
+                <input type="email" ng-model="vendor.email" placeholder="Email">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Notes</span>
+                <input type="text" ng-model="vendor.notes" placeholder="Notes">
+              </label>
+              <label class="item">
+                <button class="button button-block button-positive" type="submit">Add Vendor</button>
+              </label>
+            </div>
+        </form>
+      </ion-content>
+  </ion-modal-view>
+</script>
