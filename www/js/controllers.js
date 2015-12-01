@@ -1,6 +1,6 @@
 angular.module('wedding.controllers', [])
 
-.controller('AppCtrl', function($scope, $state, AuthService, AUTH_EVENTS, $rootScope, $firebaseObject, $ionicHistory, $ionicPopup, $timeout, $ionicSideMenuDelegate) {
+.controller('AppCtrl', function($scope, $state, AuthService, AUTH_EVENTS, $rootScope, $ionicLoading, $firebaseObject, $ionicHistory, $ionicPopup, $timeout, $ionicSideMenuDelegate) {
 
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
@@ -41,6 +41,15 @@ angular.module('wedding.controllers', [])
 	      template: err
 	    });
 	});
+
+	$rootScope.$on('loading:show', function(event, message) {
+	    $ionicLoading.show({template: message})
+	})
+
+	$rootScope.$on('loading:hide', function() {
+	    $ionicLoading.hide()
+	})
+
 })
 
 .controller('LoginCtrl', function($scope, AuthService, $state, $rootScope, AUTH_EVENTS) {
@@ -58,7 +67,7 @@ angular.module('wedding.controllers', [])
 	
 })
 
-.controller('SignupCtrl', function($scope, AuthService, $state, $ionicPopup) {
+.controller('SignupCtrl', function($scope, $rootScope, AuthService, $state, $ionicPopup, $ionicAnalytics) {
 	
 	$scope.signupData = {};
 
@@ -75,13 +84,16 @@ angular.module('wedding.controllers', [])
 	
 })
 
-.controller('GuestListCtrl', function($scope, AuthService, $state, $FirebaseArray, $ionicPopup, $firebaseArray, $ionicModal, $stateParams) {
+.controller('GuestListCtrl', function($scope, $rootScope, AuthService, $state, $firebaseArray, $ionicPopup, $firebaseArray, $ionicModal, $stateParams) {
 
-	/*var ref = new Firebase(base + '/guests/' + AuthService.getUser().uid);
-	var posts = $firebaseArray(ref);*/
+	$scope.guests = $firebaseArray(fbase.child("guests").child(AuthService.getUser().uid));
 
-	$scope.guests = $firebaseArray(fbase.child("guests/" + AuthService.getUser().uid));
-	console.log($scope.guests);
+	$rootScope.$broadcast('loading:show', 'Loading Guests...');
+
+	$scope.guests.$loaded().then(function(notes) {
+	   $rootScope.$broadcast('loading:hide');
+	});
+
 	$ionicModal.fromTemplateUrl('addGuest.html', {
 	    scope: $scope,
 	    animation: 'slide-in-up'
@@ -93,16 +105,19 @@ angular.module('wedding.controllers', [])
 
 	// Add new Guest
 	$scope.saveGuest = function() {
-	    console.log($scope.guest)
-		fbase.child("guests").child(AuthService.getUser().uid).push($scope.guest);
+		$firebaseArray(fbase.child("guests").child(AuthService.getUser().uid)).$add($scope.guest);
 	    $scope.modal.hide();
 	};
 
-	  // Execute action on hide modal
-	$scope.$on('modal.hidden', function() {
-	    // Execute action
-	});
+})
+
+.controller('GuestCtrl', function($scope, AuthService, $state, $firebaseArray, $stateParams,$firebaseObject) {
+	$scope.guest = $firebaseObject(fbase.child("guests").child(AuthService.getUser().uid).child($stateParams.guestId));
 	
+	$scope.deleteGuest = function () {
+		$firebaseObject(fbase.child("guests").child(AuthService.getUser().uid).child($stateParams.guestId)).$remove();
+		$state.go('app.guestList');
+	}
 })
 
 .controller('budgetCalCtrl', function($scope, $firebaseArray, AuthService) {
@@ -120,14 +135,6 @@ angular.module('wedding.controllers', [])
 		$scope.totalBudget = totalBudget;
 	};
 	
-})
-
-.controller('GuestCtrl', function($scope, AuthService, $state, $firebaseArray, $stateParams,$firebaseObject) {
-	$scope.guest = $firebaseObject(fbase.child("guests").child(AuthService.getUser().uid).child($stateParams.guestId));
-	$scope.deleteGuest = function () {
-		fbase.child("guests").child(AuthService.getUser().uid).child($stateParams.guestId).remove();
-		$state.go(app.guestlist)
-	}
 })
 
 .controller('VendorListCtrl', function($scope, AuthService, $state, $FirebaseArray, $ionicPopup, $firebaseArray, $ionicModal, $stateParams) {
