@@ -1,0 +1,28 @@
+<ion-view title="{{vendor.name}}">
+    <ion-nav-buttons side="right">
+        <button class="right button button-icon icon ion-trash-a" ng-click="deleteVendor()"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div class="list card">
+
+          <div class="item">
+            <h2>{{vendor.name}}</h2>
+            <p>{{vendor.email}}</p>
+          </div>
+
+          <div class="item item-body">
+            <p>
+              {{vendor.notes}}
+            </p>
+          </div>
+
+          <div class="item tabs tabs-secondary tabs-icon-left">
+            <a class="tab-item" href="tel:{{vendor.contact}}">
+              <i class="icon ion-ios-telephone"></i>
+              Call Now: {{vendor.contact}}
+            </a>
+          </div>
+
+        </div>
+    </ion-content>
+</ion-view>
