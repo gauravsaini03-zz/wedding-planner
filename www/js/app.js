@@ -37,18 +37,21 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
       var authorizedRoles = next.data.authorizedRoles;
       if (!AuthService.isAuthorized(authorizedRoles)) {
         event.preventDefault();
-        console.log($state.current)
-        $state.go($state.current, {}, {reload: true});
-        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+        if($state.current.name.length == 0) {
+        	$state.go('login')
+        } else {
+        	$state.go($state.current, {}, {reload: true});
+        	$rootScope.$broadcast(AUTH_EVENTS.notAuthorized);	
+        }
       }
     }
  
-    /*if (!AuthService.isAuthenticated()) {
-      if (next.name == 'app.profile') {
+    if (AuthService.isAuthenticated()) {
+      if (next.name == 'login') {
         event.preventDefault();
-        $state.go('login');
+        $state.go('app.dashboard');
       }
-    }*/
+    }
   });
 
 })
