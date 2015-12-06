@@ -1,6 +1,87 @@
 <ion-view view-title="Budget Calculator">
   <ion-content style="background: url(img/wed1.jpg) center; background-size: cover;">
-        <form name="budget" novalidate>
+        
+        <div class="tabs tabs-dark tabs-icon-top static">
+            <a class="tab-item" ng-click="budgetCal('Venue')">
+                <i class="icon ion-home" style="color:red"></i> Venue
+            </a>
+            <a class="tab-item" ng-click="budgetCal('Food')">
+	          <i class="icon ion-pizza" style="color:red"></i>
+	          Food
+	        </a>
+	        <a class="tab-item" ng-click="budgetCal('Decoration')" >
+	          <i style="color:red" class="icon ion-paintbrush"></i>
+	          decorations
+	        </a>
+	        <a class="tab-item" ng-click="budgetCal('Entertainment')">
+	          <i style="color:red" class="icon ion-mic-c"></i>
+	           DJ
+	        </a>
+	        <a class="tab-item" ng-click="budgetCal('Apparels')">
+	          <i style="color:red" class="icon ion-tshirt"></i>
+	          Apparels
+	        </a>
+	        <a class="tab-item" ng-click="budgetCal('Other')">
+	          <i style="color:red" class="icon ion-happy"></i>
+	          Other
+	        </a>
+        </div>
+        
+        <div id="Venue" ng-show='displayVenue'>
+	        <form name="venueBudget" novalidate>
+	            <div class="list">
+	                <label class="item item-input">
+	                    <span class="input-label light"> <i class="icon ion-cash"></i> Venue Amount Spent Today : </span>
+	                    <input ng-pattern="/^[0-9]*$/" type="text" name="amount" ng-model="amount" required/>
+	                </label>
+	                <label class="item item-input" ng-show="venueBudget.amount.$error.pattern">
+	                    <span class="input-label" style="color: #fff;">
+	                            Only numeric values allowed! <i class="icon ion-bug"></i>
+	                    </span>
+	                </label>
+	            </div>
+	            <div class="padding">
+	                <button type="button" class="button button-full button-assertive ink" ng-disabled="venueBudget.$invalid" ng-click="addVenueAmont(amount)">
+	                   <i class="icon ion-plus"></i> Add
+	                </button>
+	                <button style="width: 200px;bottom:85px;" id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900">
+	                  <i class="icon ion-cash"></i> Venue Total : {{totalVenueBudget}}
+	                </button>
+	                
+	            </div>
+	        </form>
+	    </div>
+        
+        <div id="Food" ng-show='displayFood'>
+            <form name="foodBudget" novalidate>
+                <div class="list">
+                    <label class="item item-input">
+                        <span class="input-label light"> <i class="icon ion-cash"></i> Food Amount Spent Today : </span>
+                        <input ng-pattern="/^[0-9]*$/" type="text" name="amount" ng-model="amount" required/>
+                    </label>
+                    <label class="item item-input" ng-show="foodBudget.amount.$error.pattern">
+                        <span class="input-label" style="color: #fff;">
+                                Only numeric values allowed! <i class="icon ion-bug"></i>
+                        </span>
+                    </label>
+                </div>
+                <div class="padding">
+                    <button type="button" class="button button-full button-assertive ink" ng-disabled="foodBudget.$invalid" ng-click="addFoodAmont(amount)">
+                       <i class="icon ion-plus"></i> Add
+                    </button>
+                    <button style="width: 200px;bottom:85px;" id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900">
+                      <i class="icon ion-cash"></i> Food Total : {{totalFoodBudget}}
+                    </button>
+                    
+                </div>
+            </form>
+        </div>
+        
+        <button style="width: 200px;" id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900">
+           <i class="icon ion-cash"></i> Budget Total : {{totalWeddingBudget}}
+         </button>
+        
+        <!-- <form name="budget" novalidate>
             <div class="list">
                 <label class="item item-input">
                     <span class="input-label light"> <i class="icon ion-cash"></i> Amount Spent Today : </span>
@@ -20,7 +101,7 @@
 	              <i class="icon ion-cash"></i> Total : {{weddingBudget}}
 	            </button>
             </div>
-        </form>
+        </form> -->
     
   </ion-content>
 </ion-view>

@@ -2,9 +2,20 @@
     <ion-content>
         <div class="hero " style="background-image: url('img/wed1.jpg');">
             <div class="content">
-                <div class="avatar" style="background-image: url('{{profileImage}}');"></div>
                 <b ng-if="currentUser"><h3 class="light">Hello, {{ user.name }}</h3></b>
+                <div class="avatar" style="background-image: url('{{profileImage}}');"></div>
             </div>
+        </div>
+        <div class="tabs tabs-dark tabs-icon-top static">
+            <a href="#/app/budget" class="tab-item">
+                <i class="icon ion-cash"></i> Budget
+            </a>
+            <a href="#/app/guestlist" class="tab-item">
+                <i class="icon ion-android-people"></i> Guest
+            </a>
+            <a class="tab-item">
+                <i class="icon ion-images"></i> Photos
+            </a>
         </div>
     </ion-content>
 </ion-view>

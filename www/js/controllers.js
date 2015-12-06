@@ -120,16 +120,80 @@ angular.module('wedding.controllers', [])
 	}
 })
 
-.controller('budgetCalCtrl', function($scope, $firebaseArray, AuthService) {
-	
+.controller('budgetCalCtrl', function($scope, $rootScope, $firebaseArray, AuthService) {
 	$scope.budgetCalculator = $firebaseArray(fbase.child("budgetCalculator/" + AuthService.getUser().uid));
+	$rootScope.$broadcast('loading:show', 'Loading Budget...');
+	$scope.displayVenue = true;
+	
+	$scope.budgetCal = function(type){
+		$scope.budgetType = type;
+		if($scope.budgetType == "Venue"){
+			$scope.displayVenue = true;
+			$scope.displayFood = false;
+		}
+		if($scope.budgetType == "Food"){
+			$scope.displayFood = true;
+			$scope.displayVenue = false;
+		}
+	}
+	
+	//Venue Amount
+	$scope.addVenueAmont = function(amount){
+		$scope.venue = {};
+		$scope.venue.venueAmont = amount;
+		fbase.child("budgetCalculator").child(AuthService.getUser().uid).push($scope.venue);
+		$scope.budgetCalculator.$loaded().then(function(notes) {
+			var totalVenueBudget = 0;
+			for (i = 0; i < $scope.budgetCalculator.length; i++) { 
+				console.log($scope.budgetCalculator[i].venueAmont);
+				if($scope.budgetCalculator[i].venueAmont != undefined){
+					totalVenueBudget = Number(totalVenueBudget) + Number($scope.budgetCalculator[i].venueAmont);
+				}
+			}
+			$scope.totalVenueBudget = totalVenueBudget;
+		});
+	};
+	
+	//Food Amount
+	$scope.addFoodAmont = function(amount){
+		$scope.food = {};
+		$scope.food.foodAmont = amount;
+		fbase.child("budgetCalculator").child(AuthService.getUser().uid).push($scope.food);
+		$scope.budgetCalculator.$loaded().then(function(notes) {
+			var totalFoodBudget = 0;
+			for (i = 0; i < $scope.budgetCalculator.length; i++) { 
+				if($scope.budgetCalculator[i].foodAmont != undefined){
+					totalFoodBudget = Number(totalFoodBudget) + Number($scope.budgetCalculator[i].foodAmont);
+				}
+			}
+			$scope.totalFoodBudget = totalFoodBudget;
+		});
+	};
+	
 	$scope.budgetCalculator.$loaded().then(function(notes) {
+		var totalVenueBudget = 0;
+		var totalFoodBudget = 0;
+		for (i = 0; i < $scope.budgetCalculator.length; i++) { 
+			if($scope.budgetCalculator[i].venueAmont != undefined){
+				totalVenueBudget = Number(totalVenueBudget) + Number($scope.budgetCalculator[i].venueAmont);
+			}
+			if($scope.budgetCalculator[i].foodAmont != undefined){
+				totalFoodBudget = Number(totalFoodBudget) + Number($scope.budgetCalculator[i].foodAmont);
+			}
+		}
+		$scope.totalVenueBudget = totalVenueBudget;
+		$scope.totalFoodBudget = totalFoodBudget;
+		$scope.totalWeddingBudget = Number(totalVenueBudget) + Number(totalFoodBudget);
+		$rootScope.$broadcast('loading:hide');
+	});
+	
+	/*$scope.budgetCalculator.$loaded().then(function(notes) {
 		var weddingBudget = 0;
 		for (i = 0; i < $scope.budgetCalculator.length; i++) { 
 			weddingBudget = Number(weddingBudget) + Number($scope.budgetCalculator[i].$value);
 		}
-		console.log("== weddingBudget 11 =="+weddingBudget);
 		$scope.weddingBudget = weddingBudget;
+		$rootScope.$broadcast('loading:hide');
 	});
 	
 	$scope.addAmont = function(amount){
@@ -139,17 +203,8 @@ angular.module('wedding.controllers', [])
 			for (i = 0; i < $scope.budgetCalculator.length; i++) { 
 				weddingBudget = Number(weddingBudget) + Number($scope.budgetCalculator[i].$value);
 			}
-			console.log("== weddingBudget 22 =="+weddingBudget);
 			$scope.weddingBudget = weddingBudget;
 		});
-	};
-	
-	/*$scope.getTotal = function(budgetCalculator){
-		var totalBudget = 0;
-		for (i = 0; i < budgetCalculator.length; i++) { 
-			totalBudget = Number(totalBudget) + Number(budgetCalculator[i].$value);
-		}
-		$scope.totalBudget = totalBudget;
 	};*/
 	
 })
