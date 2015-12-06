@@ -123,17 +123,34 @@ angular.module('wedding.controllers', [])
 .controller('budgetCalCtrl', function($scope, $firebaseArray, AuthService) {
 	
 	$scope.budgetCalculator = $firebaseArray(fbase.child("budgetCalculator/" + AuthService.getUser().uid));
+	$scope.budgetCalculator.$loaded().then(function(notes) {
+		var weddingBudget = 0;
+		for (i = 0; i < $scope.budgetCalculator.length; i++) { 
+			weddingBudget = Number(weddingBudget) + Number($scope.budgetCalculator[i].$value);
+		}
+		console.log("== weddingBudget 11 =="+weddingBudget);
+		$scope.weddingBudget = weddingBudget;
+	});
+	
 	$scope.addAmont = function(amount){
 		fbase.child("budgetCalculator").child(AuthService.getUser().uid).push(amount);
+		$scope.budgetCalculator.$loaded().then(function(notes) {
+			var weddingBudget = 0;
+			for (i = 0; i < $scope.budgetCalculator.length; i++) { 
+				weddingBudget = Number(weddingBudget) + Number($scope.budgetCalculator[i].$value);
+			}
+			console.log("== weddingBudget 22 =="+weddingBudget);
+			$scope.weddingBudget = weddingBudget;
+		});
 	};
 	
-	$scope.getTotal = function(budgetCalculator){
+	/*$scope.getTotal = function(budgetCalculator){
 		var totalBudget = 0;
 		for (i = 0; i < budgetCalculator.length; i++) { 
 			totalBudget = Number(totalBudget) + Number(budgetCalculator[i].$value);
 		}
 		$scope.totalBudget = totalBudget;
-	};
+	};*/
 	
 })
 
@@ -172,6 +189,15 @@ angular.module('wedding.controllers', [])
 	$scope.deleteVendor = function () {
 		fbase.child("vendors").child(AuthService.getUser().uid).child($stateParams.vendorId).remove();
 		$state.go(app.vendorlist)
+	}
+})
+
+.controller('ProfileCtrl', function($scope, AuthService, $state, $firebaseArray, $stateParams,$firebaseObject) {
+	$scope.currentUser = AuthService.getUser();
+    if($scope.currentUser) {
+		$scope.user = $firebaseObject(fbase.child('users').child($scope.currentUser.uid));
+		$scope.profileImage = AuthService.getUser().password.profileImageURL;
+
 	}
 });
 
