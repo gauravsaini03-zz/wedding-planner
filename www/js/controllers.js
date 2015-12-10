@@ -205,6 +205,14 @@ angular.module('wedding.controllers', [])
 			}
 			$scope.weddingBudget = weddingBudget;
 		});
+	};
+	
+	/*$scope.getTotal = function(budgetCalculator){
+		var totalBudget = 0;
+		for (i = 0; i < budgetCalculator.length; i++) { 
+			totalBudget = Number(totalBudget) + Number(budgetCalculator[i].$value);
+		}
+		$scope.totalBudget = totalBudget;
 	};*/
 	
 })

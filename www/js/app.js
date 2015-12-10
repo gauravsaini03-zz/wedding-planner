@@ -181,8 +181,7 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
     url: '/profile',
     views: {
       'menuContent': {
-        templateUrl: 'templates/profile.html',
-        controller: 'ProfileCtrl'
+        templateUrl: 'templates/profile.html'
       }
     },
     data: {
