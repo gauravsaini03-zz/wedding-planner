@@ -1,6 +1,6 @@
 angular.module('wedding.controllers', [])
 
-.controller('AppCtrl', function($scope, $state, AuthService, AUTH_EVENTS, $rootScope, $ionicLoading, $firebaseObject, $ionicHistory, $ionicPopup, $timeout, $ionicSideMenuDelegate) {
+.controller('AppCtrl', function($scope, $state, AuthService, AUTH_EVENTS, $firebaseAuth, $rootScope, $ionicLoading, $firebaseObject, $ionicHistory, $ionicPopup, $timeout, $ionicSideMenuDelegate) {
 
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
@@ -11,6 +11,15 @@ angular.module('wedding.controllers', [])
 		$scope.user = $firebaseObject(fbase.child('users').child($scope.currentUser.uid));
 	}
 	
+	$firebaseAuth(fbase).$onAuth(function(authData) {
+	  if (authData) {
+	    console.log("Logged in as:", authData.uid);
+	  } else {
+	  	console.log("Session Expired");
+	  	AuthService.logout();
+	  }
+	});
+
 	$scope.logout = function() {
 		AuthService.logout();
 		//$ionicHistory.clearCache();

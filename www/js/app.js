@@ -19,16 +19,14 @@ angular.module('wedding', ['ionic', 'wedding.controllers', 'wedding.constants', 
     // Initialising Firebase object
  	fbase = new Firebase("https://weddingplanner.firebaseio.com");
 
- 	var io = Ionic.io();
- 	console.log(io);
-	var user = Ionic.User.current();
-	console.log(user);
+ // 	var io = Ionic.io();
+	// var user = Ionic.User.current();
  	// Ionic Analytics
- 	$ionicAnalytics.register();
- 	$ionicAnalytics.setGlobalProperties({
-	  app_version_number: 'v0.0.1',
-	  day_of_week: (new Date()).getDay()
-	});
+ // 	$ionicAnalytics.register();
+ // 	$ionicAnalytics.setGlobalProperties({
+	//   app_version_number: 'v0.0.1',
+	//   day_of_week: (new Date()).getDay()
+	// });
   });
 
   $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
