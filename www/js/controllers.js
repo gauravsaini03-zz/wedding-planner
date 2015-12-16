@@ -95,14 +95,18 @@ angular.module('wedding.controllers', [])
 
 .controller('GuestListCtrl', function($scope, $rootScope, AuthService, $state, $firebaseArray, $ionicPopup, $firebaseArray, $ionicModal, $stateParams) {
 
+	// Fetches guests data from firebase
 	$scope.guests = $firebaseArray(fbase.child("guests").child(AuthService.getUser().uid));
-
+	
+	// Enable loader
 	$rootScope.$broadcast('loading:show', 'Loading Guests...');
-
+	
+	// Disable loader as soon as data is loaded.
 	$scope.guests.$loaded().then(function(notes) {
 	   $rootScope.$broadcast('loading:hide');
 	});
 
+	// Opens ionicModal when we add a guest 
 	$ionicModal.fromTemplateUrl('addGuest.html', {
 	    scope: $scope,
 	    animation: 'slide-in-up'
@@ -127,7 +131,7 @@ angular.module('wedding.controllers', [])
 		$firebaseObject(fbase.child("guests").child(AuthService.getUser().uid).child($stateParams.guestId)).$remove();
 		$state.go('app.guestList');
 	}
-})
+})	
 
 .controller('budgetCalCtrl', function($scope, $rootScope, $firebaseArray, AuthService) {
 	$scope.budgetCalculator = $firebaseArray(fbase.child("budgetCalculator/" + AuthService.getUser().uid));
@@ -265,6 +269,11 @@ angular.module('wedding.controllers', [])
 })
 
 .controller('ProfileCtrl', function($scope, AuthService, $state, $firebaseArray, $stateParams,$firebaseObject) {
+	
+	var obj = $firebaseObject(fbase.child("users").child(AuthService.getUser().uid));
+
+	obj.$bindTo($scope, "profile");
+
 	$scope.currentUser = AuthService.getUser();
     if($scope.currentUser) {
 		$scope.user = $firebaseObject(fbase.child('users').child($scope.currentUser.uid));
